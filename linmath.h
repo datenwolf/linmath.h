@@ -45,7 +45,7 @@ static inline float vec3_len(vec3 v)
 }
 static inline void vec3_norm(vec3 r, vec3 v)
 {
-	float k = 1.0 / vec3_length(v);
+	float k = 1.0 / vec3_len(v);
 	vec3_scale(r, v, k);
 }
 
@@ -91,7 +91,7 @@ static inline float vec4_len(vec4 v)
 }
 static inline void vec4_norm(vec4 r, vec4 v)
 {
-	float k = 1.0 / vec4_length(v);
+	float k = 1.0 / vec4_len(v);
 	vec4_scale(r, v, k);
 }
 
@@ -179,7 +179,7 @@ static inline void mat4x4_rotate(mat4x4 Q, mat4x4 M, float x, float y, float z, 
 			{    0,  u[2], -u[1], 0},
 			{-u[2],     0,  u[0], 0},
 			{ u[1], -u[0],     0, 0},
-			{    0,     0,     0, 0}
+			{    0,     0,     0, 1}
 		};
 		mat4x4_scale(S, S, s);
 
