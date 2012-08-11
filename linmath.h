@@ -132,13 +132,15 @@ static inline void mat4x4_scale(mat4x4 M, mat4x4 a, float k)
 }
 static inline void mat4x4_mul(mat4x4 M, mat4x4 a, mat4x4 b)
 {
-	int i, j, k;
-	for(j=0; j<4; ++j) for(i=0; i<4; ++i) {
-		M[i][j] = 0;
+	int k, r, c;
+	mat4x4 R;
+	for(r=0; r<4; ++r) for(c=0; c<4; ++c) {
+		R[c][r] = 0;
 		for(k=0; k<4; ++k) {
-			M[i][j] += a[i][k]*b[k][j];
+			R[c][r] += a[k][r] * b[c][k];
 		}
 	}
+	memcpy(M, R, sizeof(R));
 }
 static inline void mat4x4_mul_vec4(vec4 r, mat4x4 M, vec4 v)
 {
@@ -159,7 +161,7 @@ static inline void mat4x4_translate(mat4x4 T, float x, float y, float z)
 	T[3][1] = y;
 	T[3][2] = z;
 }
-static inline mat4x4_from_vec3_mul_outer(mat4x4 M, vec3 a, vec3 b)
+static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, vec3 a, vec3 b)
 {
 	int i, j;
 	for(i=0; i<4; ++i) for(j=0; j<4; ++j) {
@@ -183,14 +185,15 @@ static inline void mat4x4_rotate(mat4x4 Q, mat4x4 M, float x, float y, float z, 
 		};
 		mat4x4_scale(S, S, s);
 
-		mat4x4_from_vec3_mul_outer(Q, u, u);
+		mat4x4 R;
+		mat4x4_from_vec3_mul_outer(R, u, u);
 		mat4x4_identity(T);
 		mat4x4_sub(T, T, Q);
 		T[3][3] = 0.;
 		mat4x4_scale(T, T, c);
 
-		mat4x4_add(Q, Q, T);
-		mat4x4_add(Q, Q, S);
+		mat4x4_add(R, R, T);
+		mat4x4_add(Q, R, S);
 	}
 }
 static inline void mat4x4_rotate_X(mat4x4 Q, mat4x4 M, float angle)
@@ -244,11 +247,13 @@ static inline void mat4x4_col(vec4 r, mat4x4 M, int i)
 static inline void mat4x4_transpose(mat4x4 M, mat4x4 N)
 {
 	int i, j;
+	mat4x4 R;
 	for(j=0; j<4; ++j) {
 		for(i=0; i<4; ++i) {
-			M[i][j] = N[j][i];
+			R[i][j] = N[j][i];
 		}
 	}
+	memcpy(M, R, sizeof(R));
 }
 static inline void mat4x4_invert(mat4x4 T, mat4x4 M)
 {
@@ -287,7 +292,7 @@ static inline void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t, 
 	M[2][2] = -(f+n)/(f-n);
 	M[2][3] = -1;
 	
-	M[3][2] = -2.*f*n/(f-n);
+	M[3][2] = -2.*(f*n)/(f-n);
 	M[3][0] = M[3][1] = M[3][3] = 0.;
 }
 static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, float n, float f)
@@ -299,7 +304,7 @@ static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, fl
 	M[1][0] = M[1][2] = M[1][3] = 0.;
 
 	M[2][2] = -2./(f-n);
-	M[2][0] = M[2][1] = M[0][3] = 0.;
+	M[2][0] = M[2][1] = M[2][3] = 0.;
 	
 	M[3][0] = (r+l)/(r-l);
 	M[3][1] = (t+b)/(t-b);
