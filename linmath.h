@@ -1,9 +1,3 @@
-/* This program is free software. It comes without any warranty, to
- * the extent permitted by applicable law. You can redistribute it
- * and/or modify it under the terms of the Do What The Fuck You Want
- * To Public License, Version 2, as published by Sam Hocevar. See
- * http://sam.zoy.org/wtfpl/COPYING for more details. */
-
 #ifndef LINMATH_H
 #define LINMATH_H
 
@@ -130,17 +124,17 @@ static inline void mat4x4_sub(mat4x4 M, mat4x4 a, mat4x4 b)
 	for(i=0; i<4; ++i)
 		vec4_sub(M[i], a[i], b[i]);
 }
-static inline void mat4x4_scale_isotropic(mat4x4 M, mat4x4 a, float k)
+static inline void mat4x4_scale(mat4x4 M, mat4x4 a, float k)
 {
 	int i;
 	for(i=0; i<4; ++i)
 		vec4_scale(M[i], a[i], k);
 }
-static inline void mat4x4_scale(mat4x4 R, mat4x4 M, float sx, float sy, float sz)
+static inline void mat4x4_scale_aniso(mat4x4 M, mat4x4 a, float x, float y, float z)
 {
-	vec4_scale(R[0], M[0], sx);
-	vec4_scale(R[1], M[1], sy);
-	vec4_scale(R[2], M[2], sz);
+	vec4_scale(M[0], a[0], x);
+	vec4_scale(M[1], a[1], y);
+	vec4_scale(M[2], a[2], z);
 }
 static inline void mat4x4_mul(mat4x4 M, mat4x4 a, mat4x4 b)
 {
@@ -180,7 +174,7 @@ static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, vec3 a, vec3 b)
 		M[i][j] = i<3 && j<3 ? a[i] * b[j] : 0.;
 	}
 }
-static inline void mat4x4_rotate(mat4x4 Q, mat4x4 M, float x, float y, float z, float angle)
+static inline void mat4x4_rotate(mat4x4 R, mat4x4 M, float x, float y, float z, float angle)
 {
 	float s = sinf(angle);
 	float c = cosf(angle);
@@ -189,23 +183,27 @@ static inline void mat4x4_rotate(mat4x4 Q, mat4x4 M, float x, float y, float z, 
 
 	{
 		mat4x4 T;
+		mat4x4_from_vec3_mul_outer(T, u, u);
+
 		mat4x4 S = {
 			{    0,  u[2], -u[1], 0},
 			{-u[2],     0,  u[0], 0},
 			{ u[1], -u[0],     0, 0},
-			{    0,     0,     0, 1}
+			{    0,     0,     0, 0}
 		};
-		mat4x4_scale_isotropic(S, S, s);
+		mat4x4_scale(S, S, s);
 
-		mat4x4 R;
-		mat4x4_from_vec3_mul_outer(R, u, u);
-		mat4x4_identity(T);
-		mat4x4_sub(T, T, Q);
-		T[3][3] = 0.;
-		mat4x4_scale_isotropic(T, T, c);
+		mat4x4 C;
+		mat4x4_identity(C);
+		mat4x4_sub(C, C, T);
 
-		mat4x4_add(R, R, T);
-		mat4x4_add(Q, R, S);
+		mat4x4_scale(C, C, c);
+
+		mat4x4_add(T, T, C);
+		mat4x4_add(T, T, S);
+
+		T[3][3] = 1.;		
+		mat4x4_mul(R, M, T);
 	}
 }
 static inline void mat4x4_rotate_X(mat4x4 Q, mat4x4 M, float angle)
@@ -318,9 +316,9 @@ static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, fl
 	M[2][2] = -2./(f-n);
 	M[2][0] = M[2][1] = M[2][3] = 0.;
 	
-	M[3][0] = (r+l)/(r-l);
-	M[3][1] = (t+b)/(t-b);
-	M[3][2] = (f+n)/(f-n);
+	M[3][0] = -(r+l)/(r-l);
+	M[3][1] = -(t+b)/(t-b);
+	M[3][2] = -(f+n)/(f-n);
 	M[3][3] = 1.;
 }
 
