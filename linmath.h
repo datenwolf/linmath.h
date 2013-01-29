@@ -440,14 +440,15 @@ static inline void quat_from_mat4x4(quat q, mat4x4 M)
 	r = sqrtf(1. + M[p[0]][p[0]] - M[p[1]][p[1]] - M[p[2]][p[2]] );
 
 	if(r < 1e-6) {
-		mat4x4_identity(M);
+		q[0] = 1.;
+		q[1] = q[2] = q[3] = 0.;
 		return;
 	}
 
-	q[3] = (M[p[2]][p[1]] - M[p[1]][p[2]])/(2.*r);
 	q[0] = r/2.;
 	q[1] = (M[p[0]][p[1]] - M[p[1]][p[0]])/(2.*r);
 	q[2] = (M[p[2]][p[0]] - M[p[0]][p[2]])/(2.*r);
+	q[3] = (M[p[2]][p[1]] - M[p[1]][p[2]])/(2.*r);
 }
 
 #endif
