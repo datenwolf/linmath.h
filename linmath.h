@@ -334,8 +334,8 @@ static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, fl
 static inline void mat4x4_perspective(mat4x4 m, float y_fov_in_degrees, float aspect, float n, float f)
 {
 	/* Adapted from Android's OpenGL Matrix.java. */
-	const float angle_in_radians = (float) (y_fov_in_degrees * M_PI / 180.0);
-	const float a = (float) (1.0 / tan(angle_in_radians / 2.0));
+	float const angle_in_radians = (float) (y_fov_in_degrees * M_PI / 180.0);
+	float const a = (float) (1.0 / tan(angle_in_radians / 2.0));
 
 	m[0][0] = a / aspect;
 	m[1][0] = 0.0f;
