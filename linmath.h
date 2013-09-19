@@ -167,6 +167,16 @@ static inline void mat4x4_translate(mat4x4 T, float x, float y, float z)
 	T[3][1] = y;
 	T[3][2] = z;
 }
+static inline void mat4x4_translate_in_place(mat4x4 m, float x, float y, float z)
+{
+	/* Adapted from Android's OpenGL Matrix.java. */
+	int i;
+	for (i = 0; i < 4; ++i) {
+		m[3][i] += m[0][i] * x
+		        +  m[1][i] * y
+		        +  m[2][i] * z;
+	}
+}
 static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, vec3 a, vec3 b)
 {
 	int i, j;
@@ -320,6 +330,70 @@ static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, fl
 	M[3][1] = -(t+b)/(t-b);
 	M[3][2] = -(f+n)/(f-n);
 	M[3][3] = 1.;
+}
+static inline void mat4x4_perspective(mat4x4 m, float y_fov_in_degrees, float aspect, float n, float f)
+{
+	/* Adapted from Android's OpenGL Matrix.java. */
+	float const angle_in_radians = (float) (y_fov_in_degrees * M_PI / 180.0);
+	float const a = (float) (1.0 / tan(angle_in_radians / 2.0));
+
+	m[0][0] = a / aspect;
+	m[1][0] = 0.0f;
+	m[2][0] = 0.0f;
+	m[3][0] = 0.0f;
+
+	m[1][0] = 0.0f;
+	m[1][1] = a;
+	m[1][2] = 0.0f;
+	m[1][3] = 0.0f;
+
+	m[2][0] = 0.0f;
+	m[2][1] = 0.0f;
+	m[2][2] = -((f + n) / (f - n));
+	m[2][3] = -1.0f;
+
+	m[3][0] = 0.0f;
+	m[3][1] = 0.0f;
+	m[3][2] = -((2.0f * f * n) / (f - n));
+	m[3][3] = 0.0f;
+}
+static inline void mat4x4_look_at(mat4x4 m, vec3 eye, vec3 center, vec3 up)
+{
+	/* Adapted from Android's OpenGL Matrix.java. */
+	// See the OpenGL GLUT documentation for gluLookAt for a description
+	// of the algorithm. We implement it in a straightforward way:
+	vec3 f;
+	vec3_sub(f, center, eye);	
+	vec3_norm(f, f);	
+	
+	vec3 s;
+	vec3_mul_cross(s, f, up);
+	vec3_norm(s, s);
+
+	vec3 u;
+	vec3_mul_cross(u, s, f);
+
+	m[0][0] = s[0];
+	m[0][1] = u[0];
+	m[0][2] = -f[0];
+	m[0][3] = 0.0f;
+
+	m[1][0] = s[1];
+	m[1][1] = u[1];
+	m[1][2] = -f[1];
+	m[1][3] = 0.0f;
+
+	m[2][0] = s[2];
+	m[2][1] = u[2];
+	m[2][2] = -f[2];
+	m[2][3] = 0.0f;
+
+	m[3][0] = 0.0f;
+	m[3][1] = 0.0f;
+	m[3][2] = 0.0f;
+	m[3][3] = 1.0f;
+
+	mat4x4_translate_in_place(m, -eye[0], -eye[1], -eye[2]);
 }
 
 typedef float quat[4];
