@@ -171,11 +171,11 @@ static inline void mat4x4_translate_in_place(mat4x4 m, float x, float y, float z
 {
 	/* Adapted from Android's OpenGL Matrix.java. */
 	int i;
-    for (i = 0; i < 4; ++i) {
-        m[3][i] += m[0][i] * x
-        		+  m[1][i] * y
-        		+  m[2][i] * z;
-    }
+	for (i = 0; i < 4; ++i) {
+		m[3][i] += m[0][i] * x
+		        +  m[1][i] * y
+		        +  m[2][i] * z;
+	}
 }
 static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, vec3 a, vec3 b)
 {
