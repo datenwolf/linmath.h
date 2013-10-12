@@ -112,6 +112,17 @@ static inline void mat4x4_dup(mat4x4 M, mat4x4 N)
 		}
 	}
 }
+static inline void mat4x4_col(vec4 c, mat4x4 M, int i)
+{
+	memcpy(c, M[i], sizeof(c));
+}
+static inline void mat4x4_row(vec4 r, mat4x4 M, int i)
+{
+	r[0] = M[0][i];
+	r[1] = M[1][i];
+	r[2] = M[2][i];
+	r[3] = M[3][i];
+}
 static inline void mat4x4_add(mat4x4 M, mat4x4 a, mat4x4 b)
 {
 	int i;
@@ -167,14 +178,14 @@ static inline void mat4x4_translate(mat4x4 T, float x, float y, float z)
 	T[3][1] = y;
 	T[3][2] = z;
 }
-static inline void mat4x4_translate_in_place(mat4x4 m, float x, float y, float z)
+static inline void mat4x4_translate_in_place(mat4x4 M, float x, float y, float z)
 {
-	/* Adapted from Android's OpenGL Matrix.java. */
+	vec4 const t = {x, y, z, 1}
+	vec4 r;
 	int i;
 	for (i = 0; i < 4; ++i) {
-		m[3][i] += m[0][i] * x
-		        +  m[1][i] * y
-		        +  m[2][i] * z;
+		mat4x4_row(r, M, i);
+		M[3][i] += vec4_mul_inner(r, t);
 	}
 }
 static inline void mat4x4_from_vec3_mul_outer(mat4x4 M, vec3 a, vec3 b)
