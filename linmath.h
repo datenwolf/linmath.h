@@ -332,11 +332,11 @@ static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, fl
 	M[3][2] = -(f+n)/(f-n);
 	M[3][3] = 1.;
 }
-static inline void mat4x4_perspective(mat4x4 m, float y_fov_in_degrees, float aspect, float n, float f)
+static inline void mat4x4_perspective(mat4x4 m, float y_fov, float aspect, float n, float f)
 {
-	/* Adapted from Android's OpenGL Matrix.java. */
-	float const angle_in_radians = y_fov_in_degrees * M_PI / 180.f;
-	float const a = 1.f / tan(angle_in_radians / 2.f);
+	/* NOTE: Degrees are an unhandy unit to work with.
+	 * linmath.h uses radians for everything! */
+	float const a = 1.f / tan(y_fov / 2.f);
 
 	m[0][0] = a / aspect;
 	m[0][1] = 0.f;
