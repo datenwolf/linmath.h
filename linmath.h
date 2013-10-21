@@ -338,9 +338,9 @@ static inline void mat4x4_perspective(mat4x4 m, float y_fov_in_degrees, float as
 	float const a = (float) (1.0 / tan(angle_in_radians / 2.0));
 
 	m[0][0] = a / aspect;
-	m[1][0] = 0.0f;
-	m[2][0] = 0.0f;
-	m[3][0] = 0.0f;
+	m[0][1] = 0.0f;
+	m[0][2] = 0.0f;
+	m[0][3] = 0.0f;
 
 	m[1][0] = 0.0f;
 	m[1][1] = a;
