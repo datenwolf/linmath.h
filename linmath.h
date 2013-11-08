@@ -459,7 +459,7 @@ static inline void quat_mul_vec3(vec3 r, quat q, vec3 v)
 	quat_norm(q_, q_);
 	quat_mul(q_, v_, q_);
 	quat_mul(q_, q, q_);
-	memcpy(r, q_, sizeof(r));
+	memcpy(r, q_, sizeof(q_));
 }
 static inline void mat4x4_from_quat(mat4x4 M, quat q)
 {
