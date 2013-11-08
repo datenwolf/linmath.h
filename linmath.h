@@ -298,7 +298,7 @@ static inline void mat4x4_invert(mat4x4 T, mat4x4 M)
 	R[3][1] = M[0][0]*(M[2][1]*M[3][2] - M[2][2]*M[3][1]) - M[2][0]*(M[0][1]*M[3][2] - M[0][2]*M[3][1]) - M[3][0]*(M[0][2]*M[2][1] - M[0][1]*M[2][2]);
 	R[3][2] = M[0][0]*(M[1][2]*M[3][1] - M[1][1]*M[3][2]) - M[1][0]*(M[0][2]*M[3][1] - M[0][1]*M[3][2]) - M[3][0]*(M[0][1]*M[1][2] - M[0][2]*M[1][1]);
 	R[3][3] = M[0][0]*(M[1][1]*M[2][2] - M[1][2]*M[2][1]) - M[1][0]*(M[0][1]*M[2][2] - M[0][2]*M[2][1]) - M[2][0]*(M[0][2]*M[1][1] - M[0][1]*M[1][2]);
-	memcpy(T, R, sizeof(T));
+	memcpy(T, R, sizeof(R));
 }
 static inline void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t, float n, float f)
 {
