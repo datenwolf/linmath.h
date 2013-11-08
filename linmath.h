@@ -192,7 +192,7 @@ static inline void mat4x4_translate(mat4x4 T, float x, float y, float z)
 }
 static inline void mat4x4_translate_in_place(mat4x4 M, float x, float y, float z)
 {
-	vec4 t = {x, y, z, 1};
+	vec4 t = {x, y, z, 0};
 	vec4 r;
 	int i;
 	for (i = 0; i < 4; ++i) {
@@ -298,7 +298,7 @@ static inline void mat4x4_invert(mat4x4 T, mat4x4 M)
 	R[3][1] = M[0][0]*(M[2][1]*M[3][2] - M[2][2]*M[3][1]) - M[2][0]*(M[0][1]*M[3][2] - M[0][2]*M[3][1]) - M[3][0]*(M[0][2]*M[2][1] - M[0][1]*M[2][2]);
 	R[3][2] = M[0][0]*(M[1][2]*M[3][1] - M[1][1]*M[3][2]) - M[1][0]*(M[0][2]*M[3][1] - M[0][1]*M[3][2]) - M[3][0]*(M[0][1]*M[1][2] - M[0][2]*M[1][1]);
 	R[3][3] = M[0][0]*(M[1][1]*M[2][2] - M[1][2]*M[2][1]) - M[1][0]*(M[0][1]*M[2][2] - M[0][2]*M[2][1]) - M[2][0]*(M[0][2]*M[1][1] - M[0][1]*M[1][2]);
-	memcpy(T, R, sizeof(T));
+	memcpy(T, R, sizeof(R));
 }
 static inline void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t, float n, float f)
 {
@@ -459,7 +459,7 @@ static inline void quat_mul_vec3(vec3 r, quat q, vec3 v)
 	quat_norm(q_, q_);
 	quat_mul(q_, v_, q_);
 	quat_mul(q_, q, q_);
-	memcpy(r, q_, sizeof(r));
+	memcpy(r, q_, sizeof(q_));
 }
 static inline void mat4x4_from_quat(mat4x4 M, quat q)
 {
