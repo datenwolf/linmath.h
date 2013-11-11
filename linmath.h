@@ -189,7 +189,7 @@ static inline void mat4x4_translate(mat4x4 T, float x, float y, float z)
 }
 static inline void mat4x4_translate_in_place(mat4x4 M, float x, float y, float z)
 {
-	vec4 t = {x, y, z, 1};
+	vec4 t = {x, y, z, 0};
 	vec4 r;
 	int i;
 	for (i = 0; i < 4; ++i) {
