@@ -105,9 +105,7 @@ typedef vec4 mat4x4[4];
 static inline void mat4x4_identity(mat4x4 M)
 {
 	memset(M, 0, sizeof(float)*16);
-	int i;
-	for(i=0; i<4; ++i)
-		M[i][i] = 1.f;
+	M[0][0] = M[1][1] = M[2][2] = M[3][3] = 1.f;
 }
 static inline void mat4x4_dup(mat4x4 M, mat4x4 N)
 {
