@@ -2,33 +2,30 @@
 #define LINMATH_H
 
 #include <math.h>
+#include <string.h>
 
 typedef float vec3[3];
 static inline void vec3_add(vec3 r, vec3 a, vec3 b)
 {
-	int i;
-	for(i=0; i<3; ++i)
-		r[i] = a[i] + b[i];
+    r[0] = a[0] + b[0];
+    r[1] = a[1] + b[1];
+    r[2] = a[2] + b[2];
 }
 static inline void vec3_sub(vec3 r, vec3 a, vec3 b)
 {
-	int i;
-	for(i=0; i<3; ++i)
-		r[i] = a[i] - b[i];
+	r[0] = a[0] - b[0];
+	r[1] = a[1] - b[1];
+	r[2] = a[2] - b[2];
 }
 static inline void vec3_scale(vec3 r, vec3 v, float s)
 {
-	int i;
-	for(i=0; i<3; ++i)
-		r[i] = v[i] * s;
+	r[0] = v[0] * s;
+	r[1] = v[1] * s;
+	r[2] = v[2] * s;
 }
 static inline float vec3_mul_inner(vec3 a, vec3 b)
 {
-	float p = 0.f;
-	int i;
-	for(i=0; i<3; ++i)
-		p += b[i]*a[i];
-	return p;
+	return b[0]*a[0] + b[1]*a[1] + b[2]*a[2];
 }
 static inline void vec3_mul_cross(vec3 r, vec3 a, vec3 b)
 {
@@ -48,37 +45,36 @@ static inline void vec3_norm(vec3 r, vec3 v)
 static inline void vec3_reflect(vec3 r, vec3 v, vec3 n)
 {
 	float p  = 2.f*vec3_mul_inner(v, n);
-	int i;
-	for(i=0;i<3;++i)
-		r[i] = v[i] - p*n[i];
+	r[0] = v[0] - p*n[0];
+	r[1] = v[1] - p*n[1];
+	r[2] = v[2] - p*n[2];
 }
 
 typedef float vec4[4];
 static inline void vec4_add(vec4 r, vec4 a, vec4 b)
 {
-	int i;
-	for(i=0; i<4; ++i)
-		r[i] = a[i] + b[i];
+	r[0] = a[0] + b[0];
+	r[1] = a[1] + b[1];
+	r[2] = a[2] + b[2];
+	r[3] = a[3] + b[3];
 }
 static inline void vec4_sub(vec4 r, vec4 a, vec4 b)
 {
-	int i;
-	for(i=0; i<4; ++i)
-		r[i] = a[i] - b[i];
+	r[0] = a[0] - b[0];
+	r[1] = a[1] - b[1];
+	r[2] = a[2] - b[2];
+	r[3] = a[3] - b[3];
 }
 static inline void vec4_scale(vec4 r, vec4 v, float s)
 {
-	int i;
-	for(i=0; i<4; ++i)
-		r[i] = v[i] * s;
+	r[0] = v[0] * s;
+	r[1] = v[1] * s;
+	r[2] = v[2] * s;
+	r[3] = v[3] * s;
 }
 static inline float vec4_mul_inner(vec4 a, vec4 b)
 {
-	float p = 0.f;
-	int i;
-	for(i=0; i<4; ++i)
-		p += b[i]*a[i];
-	return p;
+	return b[0]*a[0] + b[1]*a[1] + b[2]*a[2] + b[3]*a[3];
 }
 static inline void vec4_mul_cross(vec4 r, vec4 a, vec4 b)
 {
@@ -99,25 +95,23 @@ static inline void vec4_norm(vec4 r, vec4 v)
 static inline void vec4_reflect(vec4 r, vec4 v, vec4 n)
 {
 	float p  = 2.f*vec4_mul_inner(v, n);
-	int i;
-	for(i=0;i<4;++i)
-		r[i] = v[i] - p*n[i];
+	r[0] = v[0] - p*n[0];
+	r[1] = v[1] - p*n[1];
+	r[2] = v[2] - p*n[2];
+	r[3] = v[3] - p*n[3];
 }
 
 typedef vec4 mat4x4[4];
 static inline void mat4x4_identity(mat4x4 M)
 {
-	int i, j;
+	memset(M, 0, sizeof(float)*16);
+	int i;
 	for(i=0; i<4; ++i)
-		for(j=0; j<4; ++j)
-			M[i][j] = i==j ? 1.f : 0.f;
+		M[i][i] = 1.f;
 }
 static inline void mat4x4_dup(mat4x4 M, mat4x4 N)
 {
-	int i, j;
-	for(i=0; i<4; ++i)
-		for(j=0; j<4; ++j)
-			M[i][j] = N[i][j];
+	memcpy(M, N, sizeof(float)*16);
 }
 static inline void mat4x4_row(vec4 r, mat4x4 M, int i)
 {
@@ -317,7 +311,7 @@ static inline void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t, 
 	M[0][0] = 2.f*n/(r-l);
 	M[0][1] = M[0][2] = M[0][3] = 0.f;
 	
-	M[1][1] = 2.*n/(t-b);
+	M[1][1] = 2.f*n/(t-b);
 	M[1][0] = M[1][2] = M[1][3] = 0.f;
 
 	M[2][0] = (r+l)/(r-l);
