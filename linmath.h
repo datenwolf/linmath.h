@@ -208,17 +208,17 @@ static inline void mat4x4_rotate(mat4x4 R, mat4x4 M, float x, float y, float z, 
 	float s = sinf(angle);
 	float c = cosf(angle);
 	vec3 u = {x, y, z};
-	vec3_norm(u, u);
 
-	{
+	if(vec3_len(u) > 1e-4) {
+		vec3_norm(u, u);
 		mat4x4 T;
 		mat4x4_from_vec3_mul_outer(T, u, u);
 
 		mat4x4 S = {
-			{  0.f,  u[2], -u[1], 0.f},
-			{-u[2],   0.f,  u[0], 0.f},
-			{ u[1], -u[0],   0.f, 0.f},
-			{  0.f,   0.f,   0.f, 0.f}
+			{    0,  u[2], -u[1], 0},
+			{-u[2],     0,  u[0], 0},
+			{ u[1], -u[0],     0, 0},
+			{    0,     0,     0, 0}
 		};
 		mat4x4_scale(S, S, s);
 
@@ -231,8 +231,10 @@ static inline void mat4x4_rotate(mat4x4 R, mat4x4 M, float x, float y, float z, 
 		mat4x4_add(T, T, C);
 		mat4x4_add(T, T, S);
 
-		T[3][3] = 1.f;		
+		T[3][3] = 1.;		
 		mat4x4_mul(R, M, T);
+	} else {
+		mat4x4_dup(R, M);
 	}
 }
 static inline void mat4x4_rotate_X(mat4x4 Q, mat4x4 M, float angle)
@@ -312,6 +314,30 @@ static inline void mat4x4_invert(mat4x4 T, mat4x4 M)
 	T[3][2] = (-M[3][0] * s[3] + M[3][1] * s[1] - M[3][2] * s[0]) * idet;
 	T[3][3] = ( M[2][0] * s[3] - M[2][1] * s[1] + M[2][2] * s[0]) * idet;
 }
+static inline void mat4x4_orthonormalize(mat4x4 R, mat4x4 M)
+{
+	mat4x4_dup(R, M);
+	float s = 1.;
+	vec3 h;
+
+	vec3_norm(R[2], R[2]);
+	
+	s = vec3_mul_inner(R[1], R[2]);
+	vec3_scale(h, R[2], s);
+	vec3_sub(R[1], R[1], h);
+	vec3_norm(R[2], R[2]);
+
+	s = vec3_mul_inner(R[1], R[2]);
+	vec3_scale(h, R[2], s);
+	vec3_sub(R[1], R[1], h);
+	vec3_norm(R[1], R[1]);
+
+	s = vec3_mul_inner(R[0], R[1]);
+	vec3_scale(h, R[1], s);
+	vec3_sub(R[0], R[0], h);
+	vec3_norm(R[0], R[0]);
+}
+
 static inline void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t, float n, float f)
 {
 	M[0][0] = 2.f*n/(r-l);
