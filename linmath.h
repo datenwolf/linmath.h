@@ -4,25 +4,25 @@
 #include <math.h>
 
 typedef float vec3[3];
-static inline void vec3_add(vec3 r, vec3 a, vec3 b)
+static inline void vec3_add(vec3 r, vec3 const a, vec3 const b)
 {
 	int i;
 	for(i=0; i<3; ++i)
 		r[i] = a[i] + b[i];
 }
-static inline void vec3_sub(vec3 r, vec3 a, vec3 b)
+static inline void vec3_sub(vec3 r, vec3 const a, vec3 const b)
 {
 	int i;
 	for(i=0; i<3; ++i)
 		r[i] = a[i] - b[i];
 }
-static inline void vec3_scale(vec3 r, vec3 v, float s)
+static inline void vec3_scale(vec3 r, vec3 const v, float const s)
 {
 	int i;
 	for(i=0; i<3; ++i)
 		r[i] = v[i] * s;
 }
-static inline float vec3_mul_inner(vec3 a, vec3 b)
+static inline float vec3_mul_inner(vec3 const a, vec3 const b)
 {
 	float p = 0.f;
 	int i;
@@ -30,22 +30,22 @@ static inline float vec3_mul_inner(vec3 a, vec3 b)
 		p += b[i]*a[i];
 	return p;
 }
-static inline void vec3_mul_cross(vec3 r, vec3 a, vec3 b)
+static inline void vec3_mul_cross(vec3 r, vec3 const a, vec3 const b)
 {
 	r[0] = a[1]*b[2] - a[2]*b[1];
 	r[1] = a[2]*b[0] - a[0]*b[2];
 	r[2] = a[0]*b[1] - a[1]*b[0];
 }
-static inline float vec3_len(vec3 v)
+static inline float vec3_len(vec3 const v)
 {
 	return sqrtf(vec3_mul_inner(v, v));
 }
-static inline void vec3_norm(vec3 r, vec3 v)
+static inline void vec3_norm(vec3 r, vec3 const v)
 {
 	float k = 1.f / vec3_len(v);
 	vec3_scale(r, v, k);
 }
-static inline void vec3_reflect(vec3 r, vec3 v, vec3 n)
+static inline void vec3_reflect(vec3 r, vec3 const v, vec3 const n)
 {
 	float p  = 2.f*vec3_mul_inner(v, n);
 	int i;
@@ -54,13 +54,13 @@ static inline void vec3_reflect(vec3 r, vec3 v, vec3 n)
 }
 
 typedef float vec4[4];
-static inline void vec4_add(vec4 r, vec4 a, vec4 b)
+static inline void vec4_add(vec4 r, vec4 const a, vec4 const b)
 {
 	int i;
 	for(i=0; i<4; ++i)
 		r[i] = a[i] + b[i];
 }
-static inline void vec4_sub(vec4 r, vec4 a, vec4 b)
+static inline void vec4_sub(vec4 r, vec4 const a, vec4 const b)
 {
 	int i;
 	for(i=0; i<4; ++i)
@@ -158,9 +158,13 @@ static inline void mat4x4_scale(mat4x4 M, mat4x4 a, float k)
 }
 static inline void mat4x4_scale_aniso(mat4x4 M, mat4x4 a, float x, float y, float z)
 {
+	int i;
 	vec4_scale(M[0], a[0], x);
 	vec4_scale(M[1], a[1], y);
 	vec4_scale(M[2], a[2], z);
+	for(i = 0; i < 4; ++i) {
+		M[3][i] = a[3][i];
+	}
 }
 static inline void mat4x4_mul(mat4x4 M, mat4x4 a, mat4x4 b)
 {
