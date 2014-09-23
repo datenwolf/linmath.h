@@ -532,9 +532,9 @@ static inline void mat4x4_from_quat(mat4x4 M, quat q)
 }
 static inline void mat4x4_mul_quat(mat4x4 R, mat4x4 M, quat q)
 {
-	quat_mul_vec3(R[0], M[0], q);
-	quat_mul_vec3(R[1], M[1], q);
-	quat_mul_vec3(R[2], M[2], q);
+	quat_mul_vec3(R[0], q, M[0]);
+	quat_mul_vec3(R[1], q, M[1]);
+	quat_mul_vec3(R[2], q, M[2]);
 
 	R[3][0] = R[3][1] = R[3][2] = 0.f;
 	R[3][3] = 1.f;
