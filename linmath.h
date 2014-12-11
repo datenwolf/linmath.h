@@ -3,48 +3,55 @@
 
 #include <math.h>
 
-typedef float vec3[3];
-static inline void vec3_add(vec3 r, vec3 const a, vec3 const b)
-{
-	int i;
-	for(i=0; i<3; ++i)
-		r[i] = a[i] + b[i];
+#define LINMATH_H_DEFINE_VEC(n) \
+typedef float vec##n[n]; \
+static inline void vec##n##_add(vec##n r, vec##n a, vec##n b) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = a[i] + b[i]; \
+} \
+static inline void vec##n##_sub(vec##n r, vec##n a, vec##n b) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = a[i] - b[i]; \
+} \
+static inline void vec##n##_scale(vec##n r, vec##n v, float s) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = v[i] * s; \
+} \
+static inline float vec##n##_mul_inner(vec##n a, vec##n b) \
+{ \
+	float p = 0.; \
+	int i; \
+	for(i=0; i<n; ++i) \
+		p += b[i]*a[i]; \
+	return p; \
+} \
+static inline float vec##n##_len(vec##n v) \
+{ \
+	return sqrtf(vec##n##_mul_inner(v,v)); \
+} \
+static inline void vec##n##_norm(vec##n r, vec##n v) \
+{ \
+	float k = 1.0 / vec##n##_len(v); \
+	vec##n##_scale(r, v, k); \
 }
-static inline void vec3_sub(vec3 r, vec3 const a, vec3 const b)
-{
-	int i;
-	for(i=0; i<3; ++i)
-		r[i] = a[i] - b[i];
-}
-static inline void vec3_scale(vec3 r, vec3 const v, float const s)
-{
-	int i;
-	for(i=0; i<3; ++i)
-		r[i] = v[i] * s;
-}
-static inline float vec3_mul_inner(vec3 const a, vec3 const b)
-{
-	float p = 0.f;
-	int i;
-	for(i=0; i<3; ++i)
-		p += b[i]*a[i];
-	return p;
-}
+
+LINMATH_H_DEFINE_VEC(2);
+LINMATH_H_DEFINE_VEC(3);
+LINMATH_H_DEFINE_VEC(4);
+
 static inline void vec3_mul_cross(vec3 r, vec3 const a, vec3 const b)
 {
 	r[0] = a[1]*b[2] - a[2]*b[1];
 	r[1] = a[2]*b[0] - a[0]*b[2];
 	r[2] = a[0]*b[1] - a[1]*b[0];
 }
-static inline float vec3_len(vec3 const v)
-{
-	return sqrtf(vec3_mul_inner(v, v));
-}
-static inline void vec3_norm(vec3 r, vec3 const v)
-{
-	float k = 1.f / vec3_len(v);
-	vec3_scale(r, v, k);
-}
+
 static inline void vec3_reflect(vec3 r, vec3 const v, vec3 const n)
 {
 	float p  = 2.f*vec3_mul_inner(v, n);
@@ -53,33 +60,6 @@ static inline void vec3_reflect(vec3 r, vec3 const v, vec3 const n)
 		r[i] = v[i] - p*n[i];
 }
 
-typedef float vec4[4];
-static inline void vec4_add(vec4 r, vec4 const a, vec4 const b)
-{
-	int i;
-	for(i=0; i<4; ++i)
-		r[i] = a[i] + b[i];
-}
-static inline void vec4_sub(vec4 r, vec4 const a, vec4 const b)
-{
-	int i;
-	for(i=0; i<4; ++i)
-		r[i] = a[i] - b[i];
-}
-static inline void vec4_scale(vec4 r, vec4 v, float s)
-{
-	int i;
-	for(i=0; i<4; ++i)
-		r[i] = v[i] * s;
-}
-static inline float vec4_mul_inner(vec4 a, vec4 b)
-{
-	float p = 0.f;
-	int i;
-	for(i=0; i<4; ++i)
-		p += b[i]*a[i];
-	return p;
-}
 static inline void vec4_mul_cross(vec4 r, vec4 a, vec4 b)
 {
 	r[0] = a[1]*b[2] - a[2]*b[1];
@@ -87,15 +67,7 @@ static inline void vec4_mul_cross(vec4 r, vec4 a, vec4 b)
 	r[2] = a[0]*b[1] - a[1]*b[0];
 	r[3] = 1.f;
 }
-static inline float vec4_len(vec4 v)
-{
-	return sqrtf(vec4_mul_inner(v, v));
-}
-static inline void vec4_norm(vec4 r, vec4 v)
-{
-	float k = 1.f / vec4_len(v);
-	vec4_scale(r, v, k);
-}
+
 static inline void vec4_reflect(vec4 r, vec4 v, vec4 n)
 {
 	float p  = 2.f*vec4_mul_inner(v, n);
