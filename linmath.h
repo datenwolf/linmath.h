@@ -41,9 +41,9 @@ static inline void vec##n##_norm(vec##n r, vec##n const v) \
 	vec##n##_scale(r, v, k); \
 }
 
-LINMATH_H_DEFINE_VEC(2);
-LINMATH_H_DEFINE_VEC(3);
-LINMATH_H_DEFINE_VEC(4);
+LINMATH_H_DEFINE_VEC(2)
+LINMATH_H_DEFINE_VEC(3)
+LINMATH_H_DEFINE_VEC(4)
 
 static inline void vec3_mul_cross(vec3 r, vec3 const a, vec3 const b)
 {
