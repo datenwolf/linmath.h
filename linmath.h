@@ -140,12 +140,14 @@ static inline void mat4x4_scale_aniso(mat4x4 M, mat4x4 a, float x, float y, floa
 }
 static inline void mat4x4_mul(mat4x4 M, mat4x4 a, mat4x4 b)
 {
+	mat4x4 temp;
 	int k, r, c;
 	for(c=0; c<4; ++c) for(r=0; r<4; ++r) {
-		M[c][r] = 0.f;
+		temp[c][r] = 0.f;
 		for(k=0; k<4; ++k)
-			M[c][r] += a[k][r] * b[c][k];
+			temp[c][r] += a[k][r] * b[c][k];
 	}
+	mat4x4_dup(M, temp);
 }
 static inline void mat4x4_mul_vec4(vec4 r, mat4x4 M, vec4 v)
 {
