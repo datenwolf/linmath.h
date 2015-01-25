@@ -5,25 +5,25 @@
 
 #define LINMATH_H_DEFINE_VEC(n) \
 typedef float vec##n[n]; \
-static inline void vec##n##_add(vec##n r, vec##n a, vec##n b) \
+static inline void vec##n##_add(vec##n r, vec##n const a, vec##n const b) \
 { \
 	int i; \
 	for(i=0; i<n; ++i) \
 		r[i] = a[i] + b[i]; \
 } \
-static inline void vec##n##_sub(vec##n r, vec##n a, vec##n b) \
+static inline void vec##n##_sub(vec##n r, vec##n const a, vec##n const b) \
 { \
 	int i; \
 	for(i=0; i<n; ++i) \
 		r[i] = a[i] - b[i]; \
 } \
-static inline void vec##n##_scale(vec##n r, vec##n v, float s) \
+static inline void vec##n##_scale(vec##n r, vec##n const v, float const s) \
 { \
 	int i; \
 	for(i=0; i<n; ++i) \
 		r[i] = v[i] * s; \
 } \
-static inline float vec##n##_mul_inner(vec##n a, vec##n b) \
+static inline float vec##n##_mul_inner(vec##n const a, vec##n const b) \
 { \
 	float p = 0.; \
 	int i; \
@@ -31,19 +31,19 @@ static inline float vec##n##_mul_inner(vec##n a, vec##n b) \
 		p += b[i]*a[i]; \
 	return p; \
 } \
-static inline float vec##n##_len(vec##n v) \
+static inline float vec##n##_len(vec##n const v) \
 { \
 	return sqrtf(vec##n##_mul_inner(v,v)); \
 } \
-static inline void vec##n##_norm(vec##n r, vec##n v) \
+static inline void vec##n##_norm(vec##n r, vec##n const v) \
 { \
 	float k = 1.0 / vec##n##_len(v); \
 	vec##n##_scale(r, v, k); \
 }
 
-LINMATH_H_DEFINE_VEC(2);
-LINMATH_H_DEFINE_VEC(3);
-LINMATH_H_DEFINE_VEC(4);
+LINMATH_H_DEFINE_VEC(2)
+LINMATH_H_DEFINE_VEC(3)
+LINMATH_H_DEFINE_VEC(4)
 
 static inline void vec3_mul_cross(vec3 r, vec3 const a, vec3 const b)
 {
