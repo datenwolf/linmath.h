@@ -465,6 +465,14 @@ static inline void quat_conj(quat r, quat q)
 		r[i] = -q[i];
 	r[3] = q[3];
 }
+static inline void quat_rotate(quat r, float angle, vec3 axis) {
+	vec3 v;
+	vec3_scale(v, axis, sinf(angle / 2));
+	int i;
+	for(i=0; i<3; ++i)
+		r[i] = v[i];
+	r[3] = cosf(angle / 2);
+}
 #define quat_norm vec4_norm
 static inline void quat_mul_vec3(vec3 r, quat q, vec3 v)
 {
