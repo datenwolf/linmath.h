@@ -476,12 +476,22 @@ static inline void quat_rotate(quat r, float angle, vec3 axis) {
 #define quat_norm vec4_norm
 static inline void quat_mul_vec3(vec3 r, quat q, vec3 v)
 {
-	quat v_ = {v[0], v[1], v[2], 0.f};
+/*
+ * Method by Fabian 'ryg' Giessen (of Farbrausch)
+t = 2 * cross(q.xyz, v)
+v' = v + q.w * t + cross(q.xyz, t)
+ */
+	vec3 t = {q[0], q[1], q[2]};
+	vec3 u = {q[0], q[1], q[2]};
 
-	quat_conj(r, q);
-	quat_norm(r, r);
-	quat_mul(r, v_, r);
-	quat_mul(r, q, r);
+	vec3_mul_cross(t, t, v);
+	vec3_scale(t, t, 2);
+
+	vec3_mul_cross(u, u, t);
+	vec3_scale(t, t, q[3]);
+
+	vec3_add(r, v, t);
+	vec3_add(r, r, u);
 }
 static inline void mat4x4_from_quat(mat4x4 M, quat q)
 {
