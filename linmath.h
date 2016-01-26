@@ -39,6 +39,18 @@ static inline void vec##n##_norm(vec##n r, vec##n const v) \
 { \
 	float k = 1.0 / vec##n##_len(v); \
 	vec##n##_scale(r, v, k); \
+} \
+static inline void vec##n##_min(vec##n r, vec##n a, vec##n b) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = a[i]<b[i] ? a[i] : b[i]; \
+} \
+static inline void vec##n##_max(vec##n r, vec##n a, vec##n b) \
+{ \
+	int i; \
+	for(i=0; i<n; ++i) \
+		r[i] = a[i]>b[i] ? a[i] : b[i]; \
 }
 
 LINMATH_H_DEFINE_VEC(2)
