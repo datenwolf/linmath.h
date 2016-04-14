@@ -114,6 +114,18 @@ static inline void mat4x4_col(vec4 r, mat4x4 M, int i)
 	for(k=0; k<4; ++k)
 		r[k] = M[i][k];
 }
+static inline void mat4x4_set_row(mat4x4 M, vec4 v, int i)
+{
+	int k;
+	for(k=0; k<4; ++k)
+		M[k][i] = v[k];
+}
+static inline void mat4x4_set_col(mat4x4 M, vec4 v, int i)
+{
+	int k;
+	for(k=0; k<4; ++k)
+		M[i][k] = v[k];
+}
 static inline void mat4x4_transpose(mat4x4 M, mat4x4 N)
 {
 	int i, j;
