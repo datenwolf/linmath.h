@@ -428,6 +428,16 @@ static inline void mat4x4_look_at(mat4x4 m, vec3 eye, vec3 center, vec3 up)
 	mat4x4_translate_in_place(m, -eye[0], -eye[1], -eye[2]);
 }
 
+static inline void mat4x4_fps_cam(mat4x4 m, vec3 pos, float ax, float ay)
+{
+        mat4x4 tmp;
+        mat4x4_identity(m);
+        mat4x4_rotate_X(m, m, ax);
+        mat4x4_rotate_Y(m, m, ay);
+        mat4x4_translate(tmp, pos[0], pos[1], pos[2]);
+        mat4x4_mul(m, m, tmp);
+}
+
 typedef float quat[4];
 static inline void quat_identity(quat q)
 {
