@@ -321,12 +321,11 @@ LINMATH_H_FUNC void mat4x4_orthonormalize(mat4x4 R, mat4x4 M)
 	s = vec3_mul_inner(R[1], R[2]);
 	vec3_scale(h, R[2], s);
 	vec3_sub(R[1], R[1], h);
-	vec3_norm(R[2], R[2]);
-
-	s = vec3_mul_inner(R[1], R[2]);
-	vec3_scale(h, R[2], s);
-	vec3_sub(R[1], R[1], h);
 	vec3_norm(R[1], R[1]);
+
+	s = vec3_mul_inner(R[0], R[2]);
+	vec3_scale(h, R[2], s);
+	vec3_sub(R[0], R[0], h);
 
 	s = vec3_mul_inner(R[0], R[1]);
 	vec3_scale(h, R[1], s);
