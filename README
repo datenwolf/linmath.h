@@ -1,6 +1,6 @@
 # linmath.h -- A small library for linear math as required for computer graphics
 
-linmath.h provides the most used types required programming computer graphice:
+linmath.h provides the most used types required for programming computer graphics:
 
 vec3 -- 3 element vector of floats
 vec4 -- 4 element vector of floats (4th component used for homogenous computations)
