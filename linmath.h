@@ -3,6 +3,12 @@
 
 #include <math.h>
 
+/*To bypass the MSVC Compiler Error C3861
+'memcpy': identifier not found*/
+#if (defined(_WIN32) || defined(_WIN64))
+void* memcpy(void* dest, const void* src, size_t count);
+#endif
+
 #ifdef LINMATH_NO_INLINE
 #define LINMATH_H_FUNC static
 #else
