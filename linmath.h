@@ -31,7 +31,7 @@ LINMATH_H_FUNC void vec##n##_scale(vec##n r, vec##n const v, float const s) \
 } \
 LINMATH_H_FUNC float vec##n##_mul_inner(vec##n const a, vec##n const b) \
 { \
-	float p = 0.; \
+	float p = 0.f; \
 	int i; \
 	for(i=0; i<n; ++i) \
 		p += b[i]*a[i]; \
@@ -43,7 +43,7 @@ LINMATH_H_FUNC float vec##n##_len(vec##n const v) \
 } \
 LINMATH_H_FUNC void vec##n##_norm(vec##n r, vec##n const v) \
 { \
-	float k = 1.0 / vec##n##_len(v); \
+	float k = 1.f / vec##n##_len(v); \
 	vec##n##_scale(r, v, k); \
 } \
 LINMATH_H_FUNC void vec##n##_min(vec##n r, vec##n const a, vec##n const b) \
@@ -72,7 +72,7 @@ LINMATH_H_FUNC void vec3_mul_cross(vec3 r, vec3 const a, vec3 const b)
 
 LINMATH_H_FUNC void vec3_reflect(vec3 r, vec3 const v, vec3 const n)
 {
-	float p  = 2.f*vec3_mul_inner(v, n);
+	float p = 2.f * vec3_mul_inner(v, n);
 	int i;
 	for(i=0;i<3;++i)
 		r[i] = v[i] - p*n[i];
@@ -338,7 +338,7 @@ LINMATH_H_FUNC void mat4x4_frustum(mat4x4 M, float l, float r, float b, float t,
 	M[0][0] = 2.f*n/(r-l);
 	M[0][1] = M[0][2] = M[0][3] = 0.f;
 	
-	M[1][1] = 2.*n/(t-b);
+	M[1][1] = 2.f*n/(t-b);
 	M[1][0] = M[1][2] = M[1][3] = 0.f;
 
 	M[2][0] = (r+l)/(r-l);
