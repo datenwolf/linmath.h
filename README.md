@@ -1,5 +1,8 @@
 # linmath.h -- A small library for linear math as required for computer graphics
 
+[![CircleCI](https://circleci.com/gh/datenwolf/linmath.h.svg?style=svg)](https://app.circleci.com/pipelines/github/datenwolf/linmath.h)
+
+
 linmath.h provides the most used types required for programming computer graphics:
 
 vec3 -- 3 element vector of floats

@@ -1,0 +1,35 @@
+version: 2.1
+
+jobs:
+  linmath-test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+     - run: gcc --version
+     - checkout
+     - run:
+         command: |
+           gcc -O0 -o linmath_test.o linmath_test.c -lm
+           ./linmath_test.o
+         name: linmath tests gcc -O0
+     - run:
+         command: |
+           gcc -O1 -o linmath_test.o linmath_test.c -lm
+           ./linmath_test.o
+         name: linmath tests gcc -O1
+     - run:
+         command: |
+           gcc -O2 -o linmath_test.o linmath_test.c -lm
+           ./linmath_test.o
+         name: linmath tests gcc -O2
+     - run:
+         command: |
+           gcc -O3 -o linmath_test.o linmath_test.c -lm
+           ./linmath_test.o
+         name: linmath tests gcc -O3
+
+
+workflows:
+  main:
+    jobs:
+      - linmath-test
