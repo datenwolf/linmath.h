@@ -1,7 +1,6 @@
 #ifndef LINMATH_H
 #define LINMATH_H
 
-#include <string.h>
 #include <math.h>
 #include <string.h>
 
